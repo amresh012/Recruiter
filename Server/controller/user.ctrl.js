@@ -1,13 +1,12 @@
-import express from "express"
-import User from "../model/user.model"
-import bcrypt from "bcrypt"
-
+const User = require("../model/user.model")
+const bcrypt = require( "bcrypt")
+const {generateToken}  = require("../config/jwtToken");
+const expressAsyncHandler = require("express-async-handler");
 // User registration controller
-// User registration controller
-export const register = async (req, res) => { 
+const register = async (req, res) => { 
     const { company, designation, name, email, password, mobile } = req.body;
     const ifUserexsist = User.find({ email })
-    if (ifUserexsist) { 
+    if (!ifUserexsist) { 
         return res.status(400).json({ message: "User already exist" })
     }
     try {
@@ -31,7 +30,7 @@ export const register = async (req, res) => {
 }
 
 // login
-export const login = async (req, res) => { 
+ const login = async (req, res) => { 
     const { email, password } = req.body;
     try { 
         const user = await User.findOne({ email });
@@ -42,9 +41,9 @@ export const login = async (req, res) => {
         if (!isValidPassword) {
             return res.status(400).json({ message: "Invalid email or password" });
         }
-        const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY,
-            { expiresIn: '1h' });
-        res.json({ token });
+      const token = generateToken()
+      
+        res.json({success: true, message:"login successfull",  user, token });
     } catch (error) {
         console.error("Error logging in user:", error);
         res.status(500).json({ message: "Internal Server Error" });
@@ -52,18 +51,30 @@ export const login = async (req, res) => {
 }
 
 // logOut
-export const logout = async (req, res) => {
-    try {
-        req.session.destroy();
-        res.clearCookie('connect.sid', { httpOnly: true });
-        res.json({ message: "Logged out successfully" });
-    } catch (error) {
-        console.error("Error logging out user:", error);
-    }
-}
+const logout = expressAsyncHandler(async (req, res) => {
+  if (!req.cookies?.refreshToken)
+    throw new Error("No Refresh Token in Cookies");
+  const refreshToken = req.cookies.refreshToken;
+  const user = await User.findOne({ refreshToken });
+  if (!user) {
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: true,
+    });
+    return res.sendStatus(204); // forbidden
+  }
+  await User.findOneAndUpdate(refreshToken, {
+    refreshToken: "",
+  });
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: true,
+  });
+  res.sendStatus(204); // forbidden
+});
 
 // Update user
-export const updateUser = async (req, res) => {
+ const updateUser = async (req, res) => {
   const { id } = req.params;
   const { name, email, password } = req.body;
 
@@ -99,7 +110,7 @@ export const updateUser = async (req, res) => {
 
 
 // delete user
-export const deleteUser = async (req, res) => {
+ const deleteUser = async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -115,20 +126,9 @@ export const deleteUser = async (req, res) => {
 };
 
 // verify email
-export const verifyEmail = async (req, res) => {
-  const { email } = req.body;
 
-  try {
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
 
-    user.isVerified = true;
-    const updatedUser = await user.save();
-    res.json({ message: "Email verified successfully", user: updatedUser });
-  } catch (error) {
-    console.error("Error verifying email:", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-};
+// verify mobile
+
+
+module.exports = {register, login , logout , deleteUser , updateUser}

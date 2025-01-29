@@ -19,7 +19,13 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         unique: true,
-        trim: true
+        trim: true,
+         validate: {
+        validator: function (value) {
+          return /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(value);
+        },
+        message: (props) => `${props.value} is not a valid email address.`,
+      },
     },
     password: {
         type: String,
@@ -27,7 +33,14 @@ const userSchema = new mongoose.Schema({
     },
     mobile: {
         type: Number,
-        required: true
+        required: true,
+        validate: {
+        validator: function (value) {
+          return /^[6-9]\d{9}$/.test(value);
+        },
+        message: (props) =>
+          `${props.value} is not a valid Indian mobile number.`,
+      },
     },
     Verified: {
         type: Boolean,
