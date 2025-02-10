@@ -6,6 +6,7 @@ const TextInput = ({
   placeholder,
   value,
   onChange,
+  id="",
   className = "",
 }) => {
   return (
@@ -18,6 +19,7 @@ const TextInput = ({
         )}
         <input
           type={type}
+          id={id}
           placeholder={placeholder}
           value={value}
           onChange={onChange}
@@ -34,8 +36,9 @@ TextInput.propTypes = {
   placeholder: PropTypes.string,
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onChange: PropTypes.func.isRequired,
-    className: PropTypes.string,
-    numberofbutton: PropTypes.number,
+  id: PropTypes.string,
+  className: PropTypes.string,
+  numberofbutton: PropTypes.number,
   buttontext: PropTypes.string
 };
 

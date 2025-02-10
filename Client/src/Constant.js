@@ -53,7 +53,7 @@ export const menu = [
   {
     id: 0,
     name: "Messages",
-    url: "/",
+    url: "/messages",
     icon: RiChat1Line,
   },
 ];

@@ -16,6 +16,22 @@ exports.getJobs = async (req, res) => {
 exports.createJobPost = async (req, res) => {
     try {
         const {
+            hiringtype,
+          title,
+          description,
+          company,
+          location,
+          salary,
+          experiance,
+            role,
+            skills,
+            filled,
+          reposted
+        } = req.body;
+
+        // Create a new job post
+        const newJob = new Job({
+            hiringtype,
           title,
           description,
           company,
@@ -23,17 +39,9 @@ exports.createJobPost = async (req, res) => {
           salary,
           experiance,
           role,
-        } = req.body;
-
-        // Create a new job post
-        const newJob = new Job({
-          title,
-          description,
-          company,
-          location,
-          salary,
-          experiance,
-          role
+          skills,
+          filled,
+          reposted,
         });
 
         // Save the job post to the database
@@ -57,13 +65,17 @@ exports.updateJobPost = async (req, res) => {
     try {
         const jobId = req.params.id;
         const {
-            title,
-            description,
-            company,
-            location,
-            salary,
-            experiance,
-            role
+          hiringtype,
+          title,
+          description,
+          company,
+          location,
+          salary,
+          experiance,
+          role,
+          skills,
+          filled,
+          reposted,
         } = req.body;
         // Find the job post by id
         const job = await Job.findById(jobId);
@@ -73,7 +85,8 @@ exports.updateJobPost = async (req, res) => {
             });
         }
         // Update the job post
-        job.title = title;
+            job.hiringtype = hiringtype;
+            job.title = title;
             job.description = description;
             job.company = company;
             job.location = location;
@@ -154,4 +167,49 @@ exports.markAsFilled = async (req, res) => {
             error: error.message
         });
     }
+};
+
+// repost job
+exports.repostJob = async (req, res) => {
+  try {
+    const jobId = req.params.id;
+
+    // Step 1: Fetch the original job post
+    const job = await Job.findById(jobId);
+    if (!job) {
+      return res.status(404).json({ message: "Job not found" });
+    }
+
+    // Step 2: Create a copy of the job with updated timestamps
+      const repostedJob = new Job({
+      hiringtype:job.hiringtype,
+      title: job.title,
+      description: job.description,
+      company: job.company,
+      location: job.location,
+      salary: job.salary,
+      role:job.role ,
+      createdAt: Date.now(),
+      expiryDate: Date.now() + 30 * 24 * 60 * 60 * 1000, // New 30-day expiry
+      reposted: true,
+      repostHistory: [...(job.repostHistory || []), { repostedAt: Date.now() }],
+    });
+
+    // Step 3: Save the reposted job
+    const savedJob = await repostedJob.save();
+
+    // Step 4: Respond with the reposted job details
+    res.status(201).json({
+      message: "Job reposted successfully",
+      job: savedJob,
+    });
+  } catch (error) {
+    console.error("Error reposting job:", error);
+    res
+      .status(500)
+      .json({
+        message: "An error occurred while reposting the job",
+        error: error.message,
+      });
+  }
 };

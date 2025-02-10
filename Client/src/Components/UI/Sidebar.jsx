@@ -3,7 +3,17 @@ import { LuArrowLeftToLine, LuArrowRightToLine } from "react-icons/lu";
 import { menu } from "../../Constant";
 import { Link } from "react-router-dom";
 import { IoIosLogOut } from "react-icons/io";
+import Badge from "@mui/material/Badge";
+import { theme } from "../../theme/theme";
+import { Avatar } from "@mui/material";
+import {useLocation} from "react-router-dom"
 const Sidebar = () => {
+
+  const location= useLocation()
+
+  const img =
+    "";
+  const name="My Name"
   const [isOpen, setIsOpen] = useState(true);
 
   const toggleSidebar = () => {
@@ -11,19 +21,49 @@ const Sidebar = () => {
   };
   const isOnline = true;
 
+ 
+function stringToColor(string) {
+  let hash = 0;
+  let i;
+
+  /* eslint-disable no-bitwise */
+  for (i = 0; i < string.length; i += 1) {
+    hash = string.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  let color = "#";
+
+  for (i = 0; i < 3; i += 1) {
+    const value = (hash >> (i * 8)) & 0xff;
+    color += `00${value.toString(16)}`.slice(-2);
+  }
+  /* eslint-enable no-bitwise */
+
+  return color;
+}
+
+function stringAvatar(name) {
+  return {
+    sx: {
+      bgcolor: stringToColor(name),
+    },
+    children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
+  };
+}
   return (
     <div
-      className={`flex flex-col relative rounded-lg  ${
+      className={`flex flex-col relative  ${
         isOpen ? "w-[20rem]" : "w-20"
-      } h-full bg-black text-white p-4 transition-width duration-300`}
+      } h-screen bg-black text-white p-4 transition-width duration-300`}
     >
       <div className="parent flex items-center justify-around gap-2 p-2">
         {isOpen ? (
           <div className="flex items-center justify-evenly gap-3">
-            <div className="bg-gray-700 border p-4 text-xl font-extrabold rounded-full text-center relative">
-              <span>ED</span>
-              {isOnline && (
-                <span className="bg-green-400 w-3  shadow-2xl shadow-green-400 bottom-1 right-1  h-3 rounded-full absolute "></span>
+            <div className="relative">
+              {img && img !== "" ? (
+                <Avatar src={img} />
+              ) : (
+                <Avatar {...stringAvatar(name)} />
               )}
             </div>
             <div className="">
@@ -36,10 +76,11 @@ const Sidebar = () => {
           </div>
         ) : (
           <div className="flex items-center justify-center w-full">
-            <div className="bg-gray-700 border p-4 text-xl font-extrabold text-white rounded-full text-center relative">
-              <span>ED</span>
-              {isOnline && (
-                <span className="bg-green-400 w-3  shadow-2xl shadow-green-400 bottom-1 right-1  h-3 rounded-full absolute "></span>
+            <div className="relative">
+              {img && img !== "" ? (
+                <Avatar src={img} />
+              ) : (
+                <Avatar {...stringAvatar(name)} />
               )}
             </div>
           </div>
@@ -61,7 +102,11 @@ const Sidebar = () => {
             <Link
               to={item.url}
               key={item.id}
-              className="flex gap-3 items-center hover:bg-gray-100 p-2 duration-500 hover:text-black group rounded-4xl"
+              className={
+                location.pathname === item.url
+                  ? "flex gap-3 items-center bg-gray-100 p-2 duration-500 text-black group rounded-4xl"
+                  : "flex gap-3 items-center hover:bg-gray-100 p-2 duration-500 hover:text-black group rounded-4xl"
+              }
             >
               <item.icon
                 size={25}
@@ -71,14 +116,10 @@ const Sidebar = () => {
                 {item.name}
               </li>
               {item.name === "Notification" && (
-                <div className="w-6 h-6 bg-red-500 absolute right-6 rounded-full text-white text-center">
-                  <p>4</p>
-                </div>
+                <Badge badgeContent={4} color="primary"></Badge>
               )}
               {item.name === "Messages" && (
-                <div className="w-6 h-6 bg-red-500 absolute right-6 rounded-full text-white text-center">
-                  <p>0</p>
-                </div>
+                <Badge badgeContent={4} color="primary"></Badge>
               )}
               {item.name === "Tips" && (
                 <div className="p-1 text-xs bg-red-200 text-red-500 absolute right-6 rounded-lg text-center">
@@ -94,11 +135,16 @@ const Sidebar = () => {
             <Link
               to={item.url}
               key={item.id}
-              className="flex relative gap-6 items-center hover:bg-gray-100 p-3 duration-500 hover:text-black group rounded-4xl"
+              className={
+                location.pathname === item.url
+                  ? "flex relative gap-6 items-center bg-gray-100 p-3 duration-500 text-black group rounded-4xl"
+                  : "flex relative gap-6 items-center hover:bg-gray-100 p-3 duration-500 hover:text-black group rounded-4xl"
+              }
+              // className="flex relative gap-6 items-center hover:bg-gray-100 p-3 duration-500 hover:text-black group rounded-4xl"
             >
               {item.name === "Notification" && (
-                <div className="w-6 h-6 bg-red-500 absolute -right-2 z-50 -top-1 rounded-full text-white text-center">
-                  <p>4</p>
+                <div className=" absolute right-0 z-50 -top-1 rounded-full text-white text-center">
+                  <Badge badgeContent={4} color="primary"></Badge>
                 </div>
               )}
               <item.icon

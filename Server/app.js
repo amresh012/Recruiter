@@ -6,6 +6,7 @@ const dbConnect = require("./config/db.config.js");
 const authRoute = require("./routes/auth.route.js");
 const jobRoute = require("./routes/job.route.js");
 const cookieParser = require("cookie-parser");
+const morgan = require("morgan");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -36,6 +37,7 @@ const corsOptions = {
 };
 
 // middlewares
+app.use(morgan("dev"))
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
