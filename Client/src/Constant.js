@@ -10,7 +10,7 @@ import { FaRegLightbulb } from "react-icons/fa";
 export const menu = [
   {
     id: 0,
-    name: "Home",
+    name: "Dashboard",
     url: "/",
     icon: RiHomeLine,
   },

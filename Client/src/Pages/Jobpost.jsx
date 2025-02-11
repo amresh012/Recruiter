@@ -50,7 +50,7 @@ const Jobpost = () => {
 
      const fetchjob = async (formData) => {
        try {
-         setIsLoading(true)
+         setIsLoading(false)
          const re = formData
            ? await axios.post(`${base_url}/job`, formData)
            : await axios.get(`${base_url}/job`);

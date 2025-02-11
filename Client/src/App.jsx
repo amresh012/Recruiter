@@ -3,7 +3,7 @@ import Layout from "./Layout/Layout"
 import Home from "./Pages/Home"
 import Jobpost from "./Pages/Jobpost"
 import Setting from "./Pages/Setting";
-
+import Message from "./Pages/Message";
 
 function App() {
 
@@ -14,6 +14,7 @@ function App() {
           <Route index element={<Home />} />
           <Route path="/job-board" element={<Jobpost />} />
           <Route path="/setting" element={<Setting />} />
+          <Route path="/messages" element={<Message />} />
         </Route>
       </Routes>
     </>
