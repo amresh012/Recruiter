@@ -4,6 +4,7 @@ import Home from "./Pages/Home"
 import Jobpost from "./Pages/Jobpost"
 import Setting from "./Pages/Setting";
 import Message from "./Pages/Message";
+import Landing from "./Pages/Landing";
 
 function App() {
 
@@ -11,7 +12,8 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
+          <Route index  element={<Landing/>}/>
+          <Route path="/dashboard" element={<Home />} />
           <Route path="/job-board" element={<Jobpost />} />
           <Route path="/setting" element={<Setting />} />
           <Route path="/messages" element={<Message />} />

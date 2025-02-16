@@ -5,7 +5,8 @@ const mongoose = require("mongoose");
 const dbConnect = require("./config/db.config.js");
 const authRoute = require("./routes/auth.route.js");
 const jobRoute = require("./routes/job.route.js");
-const cookieParser = require("cookie-parser");
+const inqueryRoute = require("./routes/inquery.route.js");
+const cookieParser = require("cookie-parser")
 const morgan = require("morgan");
 
 const app = express();
@@ -49,6 +50,8 @@ app.use(cookieParser());
 // routes
 app.use("/api/v1/user", authRoute);
 app.use("/api/v1/job", jobRoute);
+app.use("/api/v1/inquery", inqueryRoute);
+
 
 
 

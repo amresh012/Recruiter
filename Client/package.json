@@ -12,6 +12,8 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
+    "@fontsource/inter": "^5.1.1",
+    "@mui/joy": "^5.0.0-beta.51",
     "@mui/material": "^6.4.3",
     "@reduxjs/toolkit": "^2.5.1",
     "@tailwindcss/vite": "^4.0.0",
@@ -20,6 +22,7 @@
     "moment": "^2.30.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-hot-toast": "^2.5.2",
     "react-icons": "^5.4.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.1.3",

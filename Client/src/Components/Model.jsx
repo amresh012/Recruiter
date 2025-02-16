@@ -9,7 +9,7 @@ const Modal = ({ isOpen, onClose, children }) => {
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-lg shadow-lg  max-w-max max-h-[90vh]  overflow-auto w-full p-6"
+        className="bg-white rounded-lg shadow-lg min-w-[30vw] min-h-[30vh]  max-w-max max-h-[90vh]  overflow-auto w-full p-6"
         onClick={(e) => e.stopPropagation()}
       >
         <button
